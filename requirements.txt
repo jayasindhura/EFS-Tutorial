@@ -1,0 +1,8 @@
+selenium
+django==3.0.3
+psycopg2==2.8.4
+gunicorn
+django-heroku
+django-crispy-forms
+xhtml2pdf==0.2.4
+

@@ -1,0 +1,13 @@
+{% extends 'portfolio/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+<body>
+
+    <h1>Add a New Investment</h1>
+    <form method="POST" class="stock-form">{% csrf_token %}
+            {{ form.as_p }}
+        <button type="submit" class="save btn btn-primary">Save</button>
+    </form>
+{% endblock %}

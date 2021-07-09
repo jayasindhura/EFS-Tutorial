@@ -33,7 +33,7 @@
                 <th>Zip</th>
                 <th>Primary Email</th>
                 <th>Cell Phone</th>
-                <th colspan="3">Actions</th>
+                <th colspan="4">Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -51,6 +51,9 @@
                      <td><a href="{% url 'portfolio:customer_delete' pk=customer.pk %}"
                            onclick="return confirm('Are you sure you want to delete?')"
                            class="btn btn-danger">Delete</a>
+                    <td><a href="{% url 'portfolio:portfolio' pk=customer.pk %}"
+                           class="btn btn-primary">Portfolio</a>
+
                     </td>
 
 

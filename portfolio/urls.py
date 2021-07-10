@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^customers_json/', views.CustomerList.as_view()),
 
     path('pdf/<int:pk>/portfolio/', views.portfolio_summary_pdf,name='portfolio_summary_pdf'),
+    path('customer/<int:pk>/portfolio/', views.portfolio_summary_pdf_email, name='portfolio_summary_pdf_email'),
 
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)

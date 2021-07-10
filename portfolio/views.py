@@ -209,7 +209,8 @@ def portfolio(request,pk):
         sum_current_stocks_value += stock.current_stock_value()
         sum_of_initial_stock_value += stock.initial_stock_value()
 
-   return render(request, 'portfolio/portfolio.html', {'customers': customers,
+   return render(request, 'portfolio/portfolio.html', {#'customer': customer,
+                                                       'customer': customer,
                                                        'investments': investments,
                                                        'stocks': stocks,
                                                        'sum_acquired_value': sum_acquired_value,
@@ -314,6 +315,51 @@ def portfolio_summary_pdf(request, pk):
     result = html.write_pdf(response,)
     return response
 
+############Attaching pdf to emails################
+#https://stackoverflow.com/questions/33218629/attaching-pdfs-to-emails-in-django
+#https://stackoverflow.com/questions/48988707/pdf-output-using-weasyprint-not-showing-images-django
+#https://stackoverflow.com/questions/19630388/django-attach-pisa-generated-pdf-to-email
+from django.core.mail import EmailMessage
+from io import BytesIO
+@login_required
+def portfolio_summary_pdf_email(request, pk):
+    customer = get_object_or_404(Customer, pk=pk)
+    customers = Customer.objects.filter(created_date__lte=timezone.now())
+    investments = Investment.objects.filter(customer=pk)
+    stocks = Stock.objects.filter(customer=pk)
+    sum_recent_value = Investment.objects.filter(customer=pk).aggregate(Sum('recent_value'))
+    sum_acquired_value = Investment.objects.filter(customer=pk).aggregate(Sum('acquired_value'))
+    # Initialize the value of the stocks
+    sum_current_stocks_value = 0
+    sum_of_initial_stock_value = 0
+
+    # Loop through each stock and add the value to the total
+    for stock in stocks:
+        sum_current_stocks_value += stock.current_stock_value()
+        sum_of_initial_stock_value += stock.initial_stock_value()
+    html = render_to_string('portfolio/portfolio_summary_pdf.html',
+                            {'customers': customer,
+                             'investments': investments,
+                             'stocks': stocks,
+                             'sum_acquired_value': sum_acquired_value,
+                             'sum_recent_value': sum_recent_value,
+                             'sum_current_stocks_value': sum_current_stocks_value,
+                             'sum_of_initial_stock_value': sum_of_initial_stock_value, })
+
+    # create invoice e-mail
+    subject = 'Portfolio Summary'
+    message = 'Hello,\n' \
+              'Please find the attached Portfolio Summary. \n\n' \
+              'Thanks & Regards, \n \n' \
+              'Eagle Financial Services'.format(customer.name)
+    email = EmailMessage(subject,message,'efs_management@efs.com',[customer.email])
+    buffer = BytesIO()
+    HTML(string=html,base_url=request.build_absolute_uri()).write_pdf(buffer,)
+    email.attach('portfolio_summary.pdf',
+                 buffer.getvalue(),
+                 'application/pdf')
+    email.send()
+    return render(request, 'portfolio/portfolio_summary_email.html')
 
 
 

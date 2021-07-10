@@ -334,36 +334,3 @@ class CustomerList(APIView):
 
 
 
-
-
-# def portfolio_summary(request,pk):
-#     customer = get_object_or_404(Customer, pk=pk)
-#     print(customer.id)
-#     investments = Investment.objects.filter(customer=pk)
-#     stocks = Stock.objects.filter(customer=pk)
-#     sum_recent_value = Investment.objects.filter(customer=pk).aggregate(Sum('recent_value'))
-#     sum_acquired_value = Investment.objects.filter(customer=pk).aggregate(Sum('acquired_value'))
-#     # overall_investment_results = sum_recent_value-sum_acquired_value
-#     # Initialize the value of the stocks
-#     sum_current_stocks_value = 0
-#     sum_of_initial_stock_value = 0
-#
-#     # Loop through each stock and add the value to the total
-#     for stock in stocks:
-#         sum_current_stocks_value += stock.current_stock_value()
-#         sum_of_initial_stock_value += stock.initial_stock_value()
-#     html_string = render_to_string('portfolio/portfolio_summary.html', {'customer': customer,
-#                                                        'investments': investments,
-#                                                        'stocks': stocks,
-#                                                        'sum_acquired_value': sum_acquired_value,
-#                                                        'sum_recent_value': sum_recent_value,
-#                                                         'sum_current_stocks_value': sum_current_stocks_value,
-#                                                         'sum_of_initial_stock_value': sum_of_initial_stock_value,})
-#
-#     response = HttpResponse(content_type='application/pdf;')
-#     response['Content-Disposition'] = 'inline; filename=portfolio_{}.pdf'.format(customer.name)
-#     response['Content-Transfer-Encoding'] = 'binary'
-#     result = HTML(string=html_string).write_pdf(response,
-#                                                 stylesheets=[CSS(
-#                                                     settings.STATIC_ROOT + '/css/pdf.css')])
-#     return response

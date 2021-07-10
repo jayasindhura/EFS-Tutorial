@@ -73,7 +73,7 @@ class Stock(models.Model):
     def current_stock_price(self):
         symbol_f = str(self.symbol)
         main_api = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='
-        api_key = '&interval=1min&apikey=AYX4PIUJJMWF0730'
+        api_key = '&interval=1min&apikey=9AV5571OFP52UNSS'
         url = main_api + symbol_f + api_key
         json_data = requests.get(url).json()
         open_price = float(json_data["Global Quote"]["02. open"])

@@ -208,10 +208,6 @@ def portfolio(request,pk):
    for stock in stocks:
         sum_current_stocks_value += stock.current_stock_value()
         sum_of_initial_stock_value += stock.initial_stock_value()
-        overall_stocks_results = sum_current_stocks_value - float(sum_of_initial_stock_value)
-        overall_initial_amount = float(sum_current_stocks_value) + float(sum_acquired_value['acquired_value__sum'])
-        overall_recent_amount = float(sum_current_stocks_value) + float(sum_recent_value['recent_value__sum'])
-        overall_total = overall_recent_amount - overall_initial_amount
 
    return render(request, 'portfolio/portfolio.html', {'customers': customers,
                                                        'investments': investments,
@@ -221,6 +217,105 @@ def portfolio(request,pk):
                                                        'sum_current_stocks_value': sum_current_stocks_value,
                                                        'sum_of_initial_stock_value': sum_of_initial_stock_value,
                                                        })
+
+# from django.http import HttpResponse
+# from django.views.generic import View
+# from portfolio.utils import render_to_pdf
+# from django.template.loader import get_template
+#from django.template.loader import render_to_string
+
+
+# def portfolio_summary_pdf(request):
+#     movie_ratingss = Customer.objects.all()
+#     context = {'movie_ratingss': movie_ratingss,}
+#     template = get_template('portfolio/customer_list.html')
+#     html = template.render(context)
+#     pdf = render_to_pdf('portfolio/customer_list.html', context)
+#     return pdf
+
+# def portfolio_summary_pdf(request,pk):
+#     #portfolio_summary = Movie_Ratings.objects.all()
+#     customer = get_object_or_404(Customer, pk=pk)
+#     customerss = Customer.objects.filter(created_date__lte=timezone.now())
+#     investmentss = Investment.objects.filter(customer=pk)
+#     stockss = Stock.objects.filter(customer=pk)
+#     sum_recent_values = Investment.objects.filter(customer=pk).aggregate(Sum('recent_value'))
+#     sum_acquired_values = Investment.objects.filter(customer=pk).aggregate(Sum('acquired_value'))
+#     # overall_investment_results = sum_recent_value-sum_acquired_value
+#     # Initialize the value of the stocks
+#     sum_current_stocks_values = 0
+#     sum_of_initial_stock_values = 0
+#
+#     # Loop through each stock and add the value to the total
+#     for stock in stockss:
+#         sum_current_stocks_values += stock.current_stock_value()
+#         sum_of_initial_stock_values += stock.initial_stock_value()
+#         overall_stocks_results = sum_current_stocks_values - float(sum_of_initial_stock_values)
+#         overall_initial_amounts = float(sum_current_stocks_values) + float(sum_acquired_values['acquired_value__sum'])
+#         overall_recent_amounts = float(sum_current_stocks_values) + float(sum_recent_values['recent_value__sum'])
+#         overall_total = overall_recent_amounts - overall_initial_amounts
+#
+#     context = {'customerss': customerss,
+#                'investmentss': investmentss,
+#                'stockss': stockss,
+#                'sum_acquired_values': sum_acquired_values,
+#                'sum_recent_values': sum_recent_values,
+#                'sum_current_stocks_values': sum_current_stocks_values,
+#                'sum_of_initial_stock_values': sum_of_initial_stock_values,}
+#     template = get_template('portfolio/portfolio_summary_pdf.html')
+#     html = template.render(context)
+#     pdf = render_to_pdf('portfolio/portfolio_summary_pdf.html', context)
+#     return pdf
+#     # return render(request, 'portfolio/portfolio_summary_pdf.html', {'customers': customers,
+#     #                                                     'investments': investments,
+#     #                                                     'stocks': stocks,
+#     #                                                     'sum_acquired_value': sum_acquired_value,
+#     #                                                     'sum_recent_value': sum_recent_value,
+#     #                                                     'sum_current_stocks_value': sum_current_stocks_value,
+#     #                                                     'sum_of_initial_stock_value': sum_of_initial_stock_value,
+#     #                                                     })
+
+
+
+# https://www.bedjango.com/blog/how-generate-pdf-django-weasyprint/
+# https://stackoverflow.com/questions/59481394/django-oserror-no-library-called-cairo-was-found-on-windows
+from django.http import HttpResponse
+from weasyprint import HTML
+from django.template.loader import render_to_string
+
+#No changes required in utils.py
+@login_required
+def portfolio_summary_pdf(request, pk):
+    customer = get_object_or_404(Customer, pk=pk)
+    #customers = Customer.objects.filter(created_date__lte=timezone.now())
+    investments = Investment.objects.filter(customer=pk)
+    stocks = Stock.objects.filter(customer=pk)
+    sum_recent_value = Investment.objects.filter(customer=pk).aggregate(Sum('recent_value'))
+    sum_acquired_value = Investment.objects.filter(customer=pk).aggregate(Sum('acquired_value'))
+    # Initialize the value of the stocks
+    sum_current_stocks_value = 0
+    sum_of_initial_stock_value = 0
+
+    # Loop through each stock and add the value to the total
+    for stock in stocks:
+        sum_current_stocks_value += stock.current_stock_value()
+        sum_of_initial_stock_value += stock.initial_stock_value()
+    html_string = render_to_string('portfolio/portfolio_summary_pdf.html', {'customer': customer,
+                                                       'investments': investments,
+                                                       'stocks': stocks,
+                                                       'sum_acquired_value': sum_acquired_value,
+                                                       'sum_recent_value': sum_recent_value,
+                                                        'sum_current_stocks_value': sum_current_stocks_value,
+                                                        'sum_of_initial_stock_value': sum_of_initial_stock_value,})
+    html = HTML(string=html_string)
+    response = HttpResponse(content_type='application/pdf;')
+    response['Content-Disposition'] = 'inline; filename=portfolio_summary.pdf'
+    response['Content-Transfer-Encoding'] = 'binary'
+    result = html.write_pdf(response,)
+    return response
+
+
+
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -235,3 +330,40 @@ class CustomerList(APIView):
         customers_json = Customer.objects.all()
         serializer = CustomerSerializer(customers_json, many=True)
         return Response(serializer.data)
+
+
+
+
+
+
+# def portfolio_summary(request,pk):
+#     customer = get_object_or_404(Customer, pk=pk)
+#     print(customer.id)
+#     investments = Investment.objects.filter(customer=pk)
+#     stocks = Stock.objects.filter(customer=pk)
+#     sum_recent_value = Investment.objects.filter(customer=pk).aggregate(Sum('recent_value'))
+#     sum_acquired_value = Investment.objects.filter(customer=pk).aggregate(Sum('acquired_value'))
+#     # overall_investment_results = sum_recent_value-sum_acquired_value
+#     # Initialize the value of the stocks
+#     sum_current_stocks_value = 0
+#     sum_of_initial_stock_value = 0
+#
+#     # Loop through each stock and add the value to the total
+#     for stock in stocks:
+#         sum_current_stocks_value += stock.current_stock_value()
+#         sum_of_initial_stock_value += stock.initial_stock_value()
+#     html_string = render_to_string('portfolio/portfolio_summary.html', {'customer': customer,
+#                                                        'investments': investments,
+#                                                        'stocks': stocks,
+#                                                        'sum_acquired_value': sum_acquired_value,
+#                                                        'sum_recent_value': sum_recent_value,
+#                                                         'sum_current_stocks_value': sum_current_stocks_value,
+#                                                         'sum_of_initial_stock_value': sum_of_initial_stock_value,})
+#
+#     response = HttpResponse(content_type='application/pdf;')
+#     response['Content-Disposition'] = 'inline; filename=portfolio_{}.pdf'.format(customer.name)
+#     response['Content-Transfer-Encoding'] = 'binary'
+#     result = HTML(string=html_string).write_pdf(response,
+#                                                 stylesheets=[CSS(
+#                                                     settings.STATIC_ROOT + '/css/pdf.css')])
+#     return response

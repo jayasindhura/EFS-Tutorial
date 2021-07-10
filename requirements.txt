@@ -8,4 +8,5 @@ xhtml2pdf==0.2.4
 django-mathfilters
 djangorestframework
 requests
+WeasyPrint
 

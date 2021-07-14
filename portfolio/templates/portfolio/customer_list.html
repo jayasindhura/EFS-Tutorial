@@ -33,7 +33,7 @@
                 <th>Zip</th>
                 <th>Primary Email</th>
                 <th>Cell Phone</th>
-                <th colspan="5">Actions</th>
+                <th colspan="6">Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -53,9 +53,10 @@
                            class="btn btn-danger">Delete</a>
                     <td><a href="{% url 'portfolio:portfolio' pk=customer.pk %}"
                            class="btn btn-primary">Portfolio</a>
-                    <!--<td><a href="{% url 'portfolio:portfolio_summary_pdf' pk=customer.pk %}"
+                    <td><a href="{% url 'portfolio:portfolio_summary_pdf' pk=customer.pk %}"
                            class="btn btn-primary">Download Portfolio PDF Report</a>
-                    <td><a href="{% url 'portfolio:portfolio_summary_pdf_email' pk=customer.pk %}" type="button" class="btn btn-primary">Send PDF to Email</a>-->
+
+                    <td><a href="{% url 'portfolio:portfolio_summary_pdf_email' pk=customer.pk %}" type="button" class="btn btn-primary">Send PDF to Email</a>
 
                     </td>
 

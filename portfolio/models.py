@@ -72,11 +72,11 @@ class Stock(models.Model):
 
     def current_stock_price(self):
         symbol_f = str(self.symbol)
-        main_api = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='
-        api_key = '&interval=1min&apikey=TVWJTNWE9P67PN9Q'
-        url = main_api + symbol_f + api_key
+        main_api = 'http://api.marketstack.com/v1/eod?'
+        api_key = 'access_key=6843585e726a5236a46d7722a5844f9f&limit=1&symbols='
+        url = main_api + api_key + symbol_f
         json_data = requests.get(url).json()
-        open_price = float(json_data["Global Quote"]["02. open"])
+        open_price = float(json_data["data"][0]["open"])
         share_value = open_price
         return share_value
 

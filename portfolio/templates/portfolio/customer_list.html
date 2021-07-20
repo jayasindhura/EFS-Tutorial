@@ -39,14 +39,14 @@
             <tbody>
             {% for customer in customers %}
                 <tr bgcolor="white">
-                    <td>{{ customer.cust_number }}</td>
-                    <td>{{ customer.name }}</td>
-                    <td>{{ customer.address }}</td>
-                    <td>{{ customer.city }}</td>
-                    <td>{{ customer.state }}</td>
-                    <td>{{ customer.zipcode }}</td>
-                    <td>{{ customer.email }}</td>
-                    <td>{{ customer.cell_phone }}</td>
+                    <td data-title="Customer Number" id="hidden_row1" class="hidden_row">{{ customer.cust_number }}</td>
+                    <td data-title="Name" id="hidden_row2" class="hidden_row">{{ customer.name }}</td>
+                    <td data-title="Address" id="hidden_row3" class="hidden_row">{{ customer.address }}</td>
+                    <td data-title="City" id="hidden_row4" class="hidden_row">{{ customer.city }}</td>
+                    <td data-title="State" id="hidden_row5" class="hidden_row">{{ customer.state }}</td>
+                    <td data-title="Zip" id="hidden_row6" class="hidden_row">{{ customer.zipcode }}</td>
+                    <td data-title="Primary Email" id="hidden_row7" class="hidden_row">{{ customer.email }}</td>
+                    <td data-title="Cell Phone" id="hidden_row8" class="hidden_row">{{ customer.cell_phone }}</td>
                     <td><a href="{% url 'portfolio:customer_edit' pk=customer.pk %}" class="btn btn-warning">Edit</a><td>
                      <td><a href="{% url 'portfolio:customer_delete' pk=customer.pk %}"
                            onclick="return confirm('Are you sure you want to delete?')"

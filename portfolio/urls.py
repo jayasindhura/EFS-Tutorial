@@ -29,7 +29,7 @@ urlpatterns = [
     path('signup/', views.signup_view, name="signup"),
 
     path('customer/<int:pk>/portfolio/', views.portfolio, name='portfolio'),
-    #url('customers_json/', views.CustomerList.as_view()),
+    url('customers_json/', views.CustomerList.as_view()),
     #url(r'^api/customers/$', views.CustomerList),
     url(r'^api/customers/$', views.CustomerList_New),
     url(r'^api/customers/(?P<pk>[0-9]+)$', views.getCustomer),

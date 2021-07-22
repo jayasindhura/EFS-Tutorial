@@ -366,7 +366,7 @@ def portfolio_summary_pdf_email(request, pk):
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import CustomerSerializer
+from .serializers import CustomerSerializer,InvestmentSerializer
 from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly

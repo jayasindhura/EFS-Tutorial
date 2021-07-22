@@ -29,7 +29,13 @@ urlpatterns = [
     path('signup/', views.signup_view, name="signup"),
 
     path('customer/<int:pk>/portfolio/', views.portfolio, name='portfolio'),
-    url(r'^customers_json/', views.CustomerList.as_view()),
+    #url('customers_json/', views.CustomerList.as_view()),
+    #url(r'^api/customers/$', views.CustomerList),
+    url(r'^api/customers/$', views.CustomerList_New),
+    url(r'^api/customers/(?P<pk>[0-9]+)$', views.getCustomer),
+
+    url(r'^api/investments/$', views.InvestmentList_New),
+    url(r'^api/investments/(?P<pk>[0-9]+)$', views.getInvestment),
 
     path('pdf/<int:pk>/portfolio/', views.portfolio_summary_pdf,name='portfolio_summary_pdf'),
     path('email/<int:pk>/portfolio/', views.portfolio_summary_pdf_email, name='portfolio_summary_pdf_email'),
